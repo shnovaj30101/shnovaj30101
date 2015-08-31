@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple click event</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: {lat: -25.363882, lng: 131.044922 }
+  });
+
+  var southWest = new google.maps.LatLng(-31.203405, 125.244141);
+  var northEast = new google.maps.LatLng(-25.363882, 131.044922);
+
+  // Display the area between the location southWest and northEast.
+  map.fitBounds(new google.maps.LatLngBounds(southWest, northEast));
+}
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap" async defer>
+    </script>
+  </body>
+</html>
+
+

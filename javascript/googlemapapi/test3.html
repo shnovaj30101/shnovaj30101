@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+//******系統內建sever參數******//
+angry=new Object();
+sad=new Object();
+scared=new Object();
+happy=new Object();
+yabee=new Object();
+peace=new Object();
+nonecolor=new Object();
+database=new Array();
+
+//******系統內建sever參數******//
+
+//******系統內建database******//
+//var database＝new Array();
+//******系統內建database******//
+
+
+
+//******系統default初始值******//
+angry.color='#FFD1D1';
+sad.color='#CFDFFF';
+scared.color='#E1D8FF';
+happy.color='#F6FFB2';
+yabee.color='#C8FFB2';
+peace.color='#FFE8C4';
+nonecolor='#888888';
+angry.num=0;
+happy.num=0;
+scared.num=0;
+sad.num=0;
+peace.num=0;
+yabee.num=0;
+//******系統default初始值******//
+
+//******系統database_init******//
+function database_init(database) {
+for (var i=0 ; i<10000 ; i++) {
+	database[i]=new Object();
+	database[i]["angry"]=0;
+	database[i]["sad"]=0;
+	database[i]["scared"]=0;
+	database[i]["happy"]=0;
+	database[i]["yabee"]=0;
+	database[i]["peace"]=0;
+}}
+//******系統database_init******//
+
+//******mood計算function*******//
+function mood_max() {
+	var out=sad;
+	if (angry.num>out.num) out=angry;
+	if (scared.num>out.num) out=scared;
+	if (yabee.num>out.num) out=yabee;
+	if (peace.num>out.num) out=peace;
+	if (happy.num>out.num) out=happy;
+	return out;
+}
+
+function mood_init() {
+	angry.num=0;
+	happy.num=0;
+	scared.num=0;
+	sad.num=0;
+	peace.num=0;
+	yabee.num=0;
+}
+//******mood計算function*******//
+
+//******color計算function*******//
+function colorcompute (lat,lng) {
+        var num=Math.floor((lat-25.0)*1000)*100+Math.floor((lng-121.5)*1000); 
+        
+	angry.num=0;
+	happy.num=0;
+	scared.num=0;
+	sad.num=0;
+	peace.num=0;
+	yabee.num=0;
+	angry.num+=database[num]["angry"];
+	happy.num+=database[num]["happy"];
+	peace.num+=database[num]["peace"];
+	scared.num+=database[num]["scared"];
+	yabee.num+=database[num]["yabee"];
+	sad.num+=database[num]["sad"];
+	if (mood_max().num==0) return nonecolor;
+	else return mood_max().color;	
+}
+//******color計算function*******//
+
+//******紀錄心情*******//
+function recordmood (lat,lng,mood) {
+	database[Math.floor((lat-25.0)*1000)*100+Math.floor((lng-121.5)*1000)][mood]++;
+}
+//******紀錄心情*******//
+
+
+function delete_rec (arr) {
+    for (var i=0 ; i<arr.length ; i++) {
+        arr[i].setMap(null);
+    }
+}
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 25.0217, lng: 121.5352},//改成台灣大學
+    zoom: 19
+  });
+  
+  database_init(database);
+  var aryRec=new Array();
+
+  map.addListener('dragend', function() {
+      delete_rec(aryRec);
+      aryRec.lenth=0;
+      zoom=map.getZoom();
+  if (zoom>=17) {
+      aryRec[0]=new google.maps.Rectangle();	
+      var start_lat= map.getBounds().getSouthWest().lat();
+      var start_lng= map.getBounds().getSouthWest().lng();
+      var end_lat= map.getBounds().getNorthEast().lat();
+      var end_lng= map.getBounds().getNorthEast().lng();
+      
+      _lat=Math.round(start_lat*1000)/1000-0.001;
+      _lng=Math.round(start_lng*1000)/1000-0.001;
+      var color;
+      for (var i=0,lng=_lng ; ; lng+=0.001) {
+        for (lat=_lat ; ; lat+=0.001, i++) {
+          color=colorcompute (lat,lng);
+          aryRec[i].setOptions({
+            strokeColor: '#FFFFFF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor:color,
+            fillOpacity: 0.35,
+            map: map,
+            bounds: new google.maps.LatLngBounds(
+              new google.maps.LatLng(lat, lng),
+              new google.maps.LatLng(lat+0.001, lng+0.001))
+          });
+          if (lat>end_lat) break;
+          aryRec[i+1]=new google.maps.Rectangle();
+        }
+        if (lng>end_lng) break;
+      }
+  }
+  });
+  var aryRec=new Array();
+  map.addListener('rightclick', function(e) {
+     recordmood(e.latLng.lat(),e.latLng.lng(),"happy");
+     placeMarkerAndPanTo(e.latLng,map);
+  }); 
+}
+
+function placeMarkerAndPanTo(latLng, map) {
+  var marker = new google.maps.Marker({
+    position: latLng,
+    map: map
+  });
+}
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCA7iUefCAQ6X4i9P29EVBpnX61340k1xE&callback=initMap">
+    </script>
+  </body>
+</html>

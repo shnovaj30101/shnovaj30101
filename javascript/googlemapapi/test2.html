@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="nome-0.1.9.js"></script>
+    <script type="text/javascript">
+
+//******系統內建sever參數******//
+var square_len;
+var update_period;
+var day_number;
+var cur_date;//current date
+var init_date; //the initial_date
+var angry,sad,scared,happy,yabee,peace;
+var nonecolor;
+//******系統內建sever參數******//
+
+//******系統內建database******//
+var database[10000000];
+var day_color[10000000];
+var week_color[10000000];
+var month_color[10000000];
+//******系統內建database******//
+
+//******系統內建client參數******//
+var map;
+var start_date,end_date; //設定地圖的時間範圍
+var status; //'day','week','month','other'
+//******系統內建client參數******//
+
+//******系統default初始值******//
+angry.color='#FFD1D1';
+sad.color='#CFDFFF';
+scared.color='#E1D8FF';
+happy.color='#F6FFB2';
+yabee.color='#C8FFB2';
+peace.color='#FFE8C4';
+nonecolor='#FFFFFF';
+square_len=0.001;
+update_period='30min';//不知道怎麼指定time
+status='day';
+start_date.year=cur_date.year;
+start_date.month=cur_date.month;
+start_date.date=cur_date.date;
+end_date_date.year=cur_date.year;
+end_date_date.month=cur_date.month;
+end_date_date.date=cur_date.date;
+//******系統default初始值******//
+
+//******系統database_init******//
+for (var i=0 ; i<10000000 ; i++) {
+	database[i]=new Object();
+	database[i]["angry"]=new Object();
+	database[i]["sad"]=new Object();
+	database[i]["scared"]=new Object();
+	database[i]["happy"]=new Object();
+	database[i]["yabee"]=new Object();
+	database[i]["peace"]=new Object();
+}
+
+for (var i=0 ; i<10000000 ; i++) {
+	day_color[i]=nonecolor;
+	week_color[i]=nonecolor;
+	month_color[i]=nonecolor;
+}
+//******系統database_init******//
+
+//******系統periodically_update******//
+function day_update() {
+	for (var i=0 ; i<10000000 ; i++) {
+		day_color[i]=colorcompute (Math.floor(i/2000)/1000+21,(i%2000)/1000+120,cur_date,cur_date);
+	}
+}
+
+function week_update() {
+	var end_date;
+	if (day_num<7) end_date=init_date;
+	else end_date=date_sub(cur_date,6);
+	for (var i=0 ; i<10000000 ; i++) {
+		week_color[i]=colorcompute (Math.floor(i/2000)/1000+21,(i%2000)/1000+120,cur_date,end_date);
+	}
+}
+
+function month_update() {
+	var end_date;
+	if (day_num<30) end_date=init_date;
+	else end_date=date_sub(cur_date,29);
+	for (var i=0 ; i<10000000 ; i++) {
+		weekmonth_color[i]=colorcompute (Math.floor(i/2000)/1000+21,(i%2000)/1000+120,cur_date,end_date);
+	}
+}
+//******系統periodically_update******//
+
+//******系統perday_update******//
+function day_pass() {
+	database[i]["angry"][cur_date]=0;
+	database[i]["sad"][cur_date]=0;
+	database[i]["scared"][cur_date]=0;
+	database[i]["happy"][cur_date]=0;
+	database[i]["yabee"][cur_date]=0;
+	database[i]["peace"][cur_date]=0;
+	day_num++;
+}
+//******系統perday_update******//
+
+//******date計算function*******//
+function date_add(date,num) {
+	return date+num;
+}
+function date_sub(date,num) {
+	return date-num;
+}
+//******date計算function*******//
+
+//******mood計算function*******//
+function mood_max() {
+	var out=sad;
+	if (angry.num>out.num) out=angry;
+	if (scared.num>out.num) out=scared;
+	if (yabee.num>out.num) out=yabee;
+	if (peace.num>out.num) out=peace;
+	if (happy.num>out.num) out=happy;
+	return out;
+}
+
+function mood_init() {
+	angry.num=0;
+	happy.num=0;
+	scared.num=0;
+	sad.num=0;
+	peace.num=0;
+	yabee.num=0;
+}
+//******mood計算function*******//
+
+//******color計算function*******//
+function colorcompute (lat,lng,start_date,end_date) {
+	var region=database[(lat-21)*1000*2000+(lng-120)*1000];
+	mood_init();
+	for (i=start_date ; ; i=date_add(i,1)) {
+		angry.num+=region["angry"][i];
+		happy.num+=region["happy"][i];
+		peace.num+=region["peace"][i];
+		scared.num+=region["scared"][i];
+		yabee.num+=region["yabee"][i];
+		sad.num+=region["sad"][i];
+		if (i==end_date) break;
+	}
+	if (mood_max().num==0) return nonecolor;
+	else return mood_max().color;	
+}
+//******color計算function*******//
+
+//******紀錄心情*******//
+function recordmood (lat,lng,date,mood) {
+	database[(lat-21)*1000*2000+(lng-120)*1000][mood][date]++;
+}
+//******紀錄心情*******//
+
+//******傳回自己位置座標******//
+function mypos() {
+    $(document).ready(function() {
+        lng = nome.getLongitude();
+        lat = nome.getLatitude();
+    });
+  return google.maps.LatLng(lat, lng);
+}
+//******傳回自己位置座標******//
+
+//******圖案function*******//
+function delete_rec (arr) {
+	for (var i=0 ; i<arr.length ; i++) {
+		arr[i].setMap(null);
+	}
+}
+
+function initMap(start_date,end_date,status) {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: mypos().lat(), lng: mypos(),lng()}, 
+    zoom: 19
+  });
+
+  var aryRec=new Array();
+  map.addListener('dragend', function() {
+      delete_rec(aryRec);
+      aryRec.lenth=0;
+      zoom=map.getZoom();
+  if (zoom>=17) {
+      aryRec[0]=new google.maps.Rectangle();	
+      var start_lat= map.getBounds().getSouthWest().lat();
+      var start_lng= map.getBounds().getSouthWest().lng();
+      var end_lat= map.getBounds().getNorthEast().lat();
+      var end_lng= map.getBounds().getNorthEast().lng();
+      
+      _lat=Math.round(start_lat*1000)/1000-square_len;
+      _lng=Math.round(start_lng*1000)/1000-square_len;
+      for (var i=0,lng=_lng ; ; lng+=square_len) {
+        for (lat=_lat ; ; lat+=square_len, i++) {
+          switch (status) {
+            case "day":
+              color=day_color[(lat-21)*1000*2000+(lng-120)*1000];
+              break;
+            case "week":
+              color=week_color[(lat-21)*1000*2000+(lng-120)*1000];
+              break;
+            case "month":
+              color=month_color[(lat-21)*1000*2000+(lng-120)*1000];
+              break;
+            default:
+              color=colorcompute (lat,lng,start_date,end_date);
+          }
+          aryRec[i].setOptions({
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: color,
+            fillOpacity: 0.35,
+            map: map,
+            bounds: new google.maps.LatLngBounds(
+              new google.maps.LatLng(lat, lng),
+              new google.maps.LatLng(lat+square_len, lng+square_len))
+          });
+          if (lat>end_lat) break;
+          aryRec[i+1]=new google.maps.Rectangle();
+        }
+        if (lng>end_lng) break;
+      }
+  }
+  });
+}
+//******圖案function*******//
+
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCA7iUefCAQ6X4i9P29EVBpnX61340k1xE &callback=initMap">
+    </script>
+  </body>
+</html>
