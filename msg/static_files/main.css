@@ -1,0 +1,81 @@
+textarea {
+  width: 500px;
+  height: 200px;
+  display: block;
+  font-family: monospace;
+  background-color: lightgrey;  
+}
+
+
+#user-nickname-area {
+  height: 20px;
+  width:200px;
+  background-color: lightgrey;
+  display: block;
+  margin-left: auto;	
+  margin-right: auto;
+}
+
+#user-password-area {
+  height: 20px;
+  width:200px;
+  background-color: lightgrey;
+  display: block;
+  margin-left: auto;	
+  margin-right: auto;
+}
+#other-nickname-area {
+  height: 20px;
+  background-color: lightgrey;
+}
+
+#user-emoji-area {
+  width: 220px;
+  display: block;
+  margin-left: auto;	
+  margin-right: auto;
+}
+
+#user-input-area {
+  display: block;
+  height:100px;
+  margin-left: auto;	
+  margin-right: auto;
+}
+
+.request-zone {
+  float:left;
+  width:40%;
+  display: inline-block;
+  vertical-align: top;
+  text-align:center;
+  border-style:solid;
+}
+
+.response-zone {
+  width:55%;
+  display: inline-block;
+  vertical-align: top;
+  text-align:center;
+  float:right;
+  border-style:solid;
+}
+
+#other-nickname-area {
+  display: block;
+  margin-left: auto;	
+  margin-right: auto;
+}
+
+#log-area {
+  height:330px;
+  width:95%;
+  display: block;
+  margin-left: auto;	
+  margin-right: auto;
+}
+
+body {
+  background-color: PowderBlue;
+}
+

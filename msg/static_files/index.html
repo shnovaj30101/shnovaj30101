@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Message Board</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/main.css">
+  </head>
+  <body>
+    <script language="JavaScript">
+      emoji=55555;//'\u{1F600}';
+      function emotion(num) {
+        if (num==0)
+          emoji=0;//'\u{1F600}';
+        else if (num==1)
+          emoji=1;//'\u{1F620}';
+        else if (num==2)
+          emoji=2;//'\u{1F625}';
+        else if (num==3)
+          emoji=3;//'\u{1F61A}';
+        else if (num==4)
+          emoji=4;//'\u{1F634}';
+      }
+    </script>
+
+    <div style="text-align:center;"><h1>Message Board</h1></div>
+
+    <div>
+      <div class="request-zone">
+        <h4>Your nickname:</h4>
+        <textarea id="user-nickname-area" autofocus></textarea>
+        <h4>Your password:</h4>
+        <textarea id="user-password-area" autofocus></textarea>
+        <button id="user-btn">login</button >
+        <button id="logout-btn">logout</button >
+        <button id="new-btn">register</button >
+        <h4 id='your_id'> you have to login! </h4>
+        <fieldset id="user-emoji-area">
+          <legend>Emotion</legend>
+          <input type="radio" name="emoji" onClick=emotion(0)>&#x1F600
+          <input type="radio" name="emoji" onClick=emotion(1)>&#x1F620
+          <input type="radio" name="emoji" onClick=emotion(2)>&#x1F625
+          <input type="radio" name="emoji" onClick=emotion(3)>&#x1F61A
+          <input type="radio" name="emoji" onClick=emotion(4)>&#x1F634
+        </fieldset>
+        <h2>Your request to server:</h2>
+        <textarea id="user-input-area" autofocus></textarea>
+        <button id="user-input-send-btn">send</button>
+        <button id="refresh-btn">refresh</button>
+        </div>
+
+    <div>  
+      <div class="response-zone">
+        <h2>Server response history:</h2>
+        <h4>Read nickname:</h4>
+        <textarea id="other-nickname-area" autofocus></textarea>
+        <button id="other-nickname-btn">filter</button>
+
+        <textarea readonly id="log-area"></textarea>
+      </div>
+
+    <script src="/main.js"></script>
+
+  </body>
+</html>
