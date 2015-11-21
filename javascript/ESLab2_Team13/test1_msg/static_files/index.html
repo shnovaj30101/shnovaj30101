@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Message Board</title>
+    <link rel="icon" href="/favicon.ico">  
+    <link rel="stylesheet" href="/main.css">  
+  </head>
+  <body>
+    <h1>Ambient Data</h1>
+    <script type="text/javascript" src="/wz_jsgraphics.js"></script>
+    <script type="text/javascript" src="/line.js"></script>
+    
+    <div>
+      <div class = "ambient-zone">
+        <form>
+        <p1>Record Time:&nbsp&nbsp</p1>
+        <select name="ambient-choice" id="ambient-choice" onChange="choose(this)">
+        <option value="">請選擇</option>
+        </select>
+      </form>
+      <button id="refresh-btn">refresh</button>
+      <p1>&nbsp<br>&nbsp<br></p1>
+      <div id="lineCanvas" style="overflow: auto; position:relative;height:400px;width:800px;"></div>
+    </div>
+
+    <h1>Camera Data</h1>
+
+    <div>
+      <div class = "camera-zone">
+        <form>
+        <p1>Record Time:&nbsp&nbsp</p1>
+        <select name="camera-choice" id="camera-choice" onChange="c_choose(this)">
+        <option value="">請選擇</option>
+        </select>
+      </form>
+      <button id="c_refresh-btn">refresh</button>
+    <div> 
+      <img id = "image" style="padding-left:80px;">
+      </img>
+    </div>
+    </div>
+
+    <script src="/main.js"></script>  
+
+  </body>
+</html>

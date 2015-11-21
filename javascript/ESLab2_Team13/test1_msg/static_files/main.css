@@ -1,0 +1,17 @@
+.camera-zone{
+  border-style:solid; 
+  display: inline-block;
+  vertical-align: top;
+  height: 510px;
+  width: 800px;
+}
+.ambient-zone {
+  border-style:solid; 
+  display: inline-block;
+  vertical-align: top;
+  height: 400px;
+  width: 800px;
+}
+body {
+  background-color: PowderBlue;
+}
