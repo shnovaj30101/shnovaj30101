@@ -58,7 +58,7 @@ var do_respond_to_an_HTTP_request = function (req, res) {
       assert(respbody instanceof Buffer);
       assert(!respheaders || typeof respheaders === 'object');
       if (respheaders)
-        for (var header_name of Object.keys(respheaders))
+        for (var header_name in Object.keys(respheaders))
           res.setHeader(header_name, respheaders[header_name]);
 
       res.write(respbody);

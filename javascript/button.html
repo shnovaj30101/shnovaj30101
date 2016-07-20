@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title class="gettext">FIT Activity Information Maintenance</title>	
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./assets/bootstrap-table/src/bootstrap-table.css">
+	<link rel="stylesheets" href="../register.css" />
+
+	<script src="./assets/jquery.min.js"></script>
+	<script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+	<script src="./assets/bootstrap-table/src/bootstrap-table.js"></script>
+
+	<script src="./javascripts/announcementValidation.js"></script>
+
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="./javascripts/bootstrap-datetimepicker.js"></script>
+	<link rel="stylesheets" type="text/css" href="../bootstrap-datetimepicker.min.css" />
+
+	<script src="./javascripts/jquery.i18n.js"></script>
+	<script src="./javascripts/shareFun.js"></script>
+	<script src="./javascripts/canvas2image.js"></script>
+        <script src="build/react.js"></script>
+        <script src="build/react-dom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.29.5/react-bootstrap.js"></script>
+</head>
+<body>
+
+
+        <div class="container">
+		<center><h2 class="well gettext">Activity information maintenance</h2></center>
+
+    <div id="toolbar-container"> </div>
+
+		<table id="table"
+				data-toggle="table"
+				data-toolbar="#toolbar"
+				data-ajax="GetAnnouncementData"
+				data-search="true"
+				data-show-refresh="true"
+				data-click-to-select="true"
+				data-side-pagination="server"
+				data-pagination="true">
+			<thead>
+			<tr>
+				<th data-field="state" data-checkbox="true"></th>
+				<th data-field="title" class="gettext">Title</th>
+				<th data-field="issueDate" class="gettext">Issue Date</th>
+				<th data-field="startDate" class="gettext">Start Date</th>
+				<th data-field="endDate" class="gettext">End Date</th>
+				<th data-field="locationFilter" class="gettext">District</th>
+				<th data-field="content" class="gettext">Content</th>
+				<th data-field="refLink" class="gettext">Link</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+<!------ the form structure (start)------>
+
+    <div id="modalUpdate" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+				    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				    <h4 class="modal-update"></h4>
+				</div>
+				<div class="modal-body">
+				
+
+					<div class="form-group">
+						<label class="gettext">Title</label>
+						<input type="text" name="title" placeholder="Enter Title Here.." class="form-control gettext">
+					</div>
+
+				<div class="form-group">
+					<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="issueDate1" data-link-format="yyyy-mm-dd">
+						<label class="gettext">Issue Date</label>
+						<input type="text" value="" readonly name="issueDate1" id="issueDate1" placeholder="Enter Issue Date Here.." class="form-control gettext">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="startDate1" data-link-format="yyyy-mm-dd">
+						<label class="gettext">Start Date</label>
+						<input type="text" value="" readonly name="startDate1" id="startDate1" placeholder="Enter Start Date Here.." class="form-control gettext">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-field="endDate1" data-link-format="yyyy-mm-dd">
+						<label class="gettext">End Date</label>
+						<input type="text" value="" readonly name="endDate1" id="endDate1" placeholder="Enter End Date Here.." class="form-control gettext">
+					</div>
+				</div>
+
+					<div class="form-group">
+						<label class="gettext">District</label>
+						<select name="locationFilter1" id="locationFilter1" class="form-control">
+						  <option Value="全區" style="color:red">全區</option>
+						  <option Value="新店區" style="color:green">新店區</option>
+						  <option Value="木栅區" style="color:green">木栅區</option>
+						  <option Value="八里區" style="color:green">八里區</option>
+						  <option Value="三芝區" style="color:green">三芝區</option>
+						  <option Value="三重區" style="color:green">三重區</option>
+						  <option Value="三峡區" style="color:green">三峡區</option>
+						  <option Value="土城區" style="color:green">土城區</option>
+						  <option Value="中和區" style="color:green">中和區</option>
+						  <option Value="五股區" style="color:green">五股區</option>
+						  <option Value="平溪區" style="color:green">平溪區</option>
+						  <option Value="永和區" style="color:green">永和區</option>
+						  <option Value="石門區" style="color:green">石門區</option>
+						  <option Value="石碇區" style="color:green">石碇區</option>
+						  <option Value="汐止區" style="color:green">汐止區</option>
+						  <option Value="坪林區" style="color:green">坪林區</option>
+						  <option Value="林口區" style="color:green">林口區</option>
+						  <option Value="板橋區" style="color:green">板橋區</option>
+						  <option Value="金山區" style="color:green">金山區</option>
+						  <option Value="泰山區" style="color:green">泰山區</option>
+						  <option Value="烏來區" style="color:green">烏來區</option>
+						  <option Value="貢寮區" style="color:green">貢寮區</option>
+						  <option Value="淡水區" style="color:green">淡水區</option>
+						  <option Value="深坑區" style="color:green">深坑區</option>
+						  <option Value="新莊區" style="color:green">新莊區</option>
+						  <option Value="瑞芳區" style="color:green">瑞芳區</option>
+						  <option Value="萬里區" style="color:green">萬里區</option>
+						  <option Value="樹林區" style="color:green">樹林區</option>
+						  <option Value="雙溪區" style="color:green">雙溪區</option>
+						  <option Value="蘆州區" style="color:green">蘆州區</option>
+						  <option Value="鶯歌區" style="color:green">鶯歌區</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label class="gettext">Content</label>
+						<textarea cols="60" rows="20"" name="content1" id="content1" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+						<label class="gettext">Link</label>
+						<input type="text" name="refLink" placeholder="Please Enter Link Here.." id="refLink" class="form-control gettext">
+					</div>
+
+					<div class="form-group">
+						<label class="gettext">Attach title icon:</label>
+						<form id = "uploadForm1" name = "uploadForm1"
+							enctype = "multipart/form-data"
+							action = "javascript:;"
+							role = "form"
+							method = "post">
+
+							<input type="file" id="fileInput1" name="files"/>
+							<button class = "btn btn-primary gettext">Upload File</button>
+				            <span class = "help-inline gettext" id = "spanMessage1">Select icon</span>
+
+							<div class = "row" style = "text-align: center">
+								<img id = "imgShow1" />
+							</div>
+
+						</form>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default gettext" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary submit gettext">Submit</button>
+				</div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+	<div id="modalAdd" name="modalAdd" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-add"></h4>
+				</div>
+
+
+				<div class="modal-body">
+
+<!------ the FormData container (start) ------>
+    <div id="test-container"> </div>
+
+
+
+
+					<div class="form-group">
+						<label class="gettext">Attach title icon:</label>
+						<form id = "uploadForm" name = "uploadForm"
+							enctype = "multipart/form-data"
+							action = "javascript:;"
+							role = "form"
+							method = "post">
+
+							<input type="file" id="fileInput" name="files"/>
+							<button class = "btn btn-primary gettext">Upload File</button>
+				            <span class = "help-inline gettext" id = "spanMessage">Select icon</span>
+
+							<div class = "row" style = "text-align: left">
+								<img id = "imgShow" />
+							</div>
+
+						</form>
+					</div>
+
+				</div>
+
+<!------ the FormData container (end) ------>
+ 
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default gettext" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary submit gettext">Submit</button>
+				</div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	
+<!------ the form structure (end)------>
+
+
+
+    <script type="text/babel">
+	  
+	 var Form=ReactBootstrap.Form;              
+      var FormGroup=ReactBootstrap.FormGroup;    
+      var ControlLabel=ReactBootstrap.ControlLabel;
+      var FormControl=ReactBootstrap.FormControl;     
+	  var Button=ReactBootstrap.Button;
+	  var ButtonToolbar=ReactBootstrap.ButtonToolbar;
+	  var ButtonGroup=ReactBootstrap.ButtonGroup;
+
+	  var $modalCreate = $('#modalAdd').modal({show:false});
+	  
+	  var Buttons = function () {
+	      this.FuncArray=[];
+		  this.NameArray=[];
+	  };
+
+	  Buttons.prototype = {
+	      Add: function (name,func) {
+		     this.FuncArray[this.FuncArray.length]=func;
+			 this.NameArray[this.NameArray.length]=name;
+		  },
+		  Func: function () {
+		     return this.FuncArray;
+		  },
+		  Name: function () {
+		     return this.NameArray;
+		  }
+	  };
+	  
+	  var FormDatas = function () {
+	      this.DataType=[];
+		  this.DataTitle=[];
+		  this.DataPlaceholder=[];
+		  this.DataSelectOption=[];
+		  this.DataTextareaRow=[];
+		  this.DataTextareaCol=[];
+
+	  }; 
+
+      FormDatas.prototype = {
+	      AddInput: function (title,placeholder) {
+		     this.DataType[this.DataType.length]="input";
+			 this.DataTitle[this.DataTitle.length]=title;
+			 this.DataPlaceholder[this.DataPlaceholder.length]=placeholder;
+			 this.DataSelectOption[this.DataSelectOption.length]=[];
+			 this.DataTextareaRow[this.DataTextareaRow.length]=0;
+			 this.DataTextareaCol[this.DataTextareaCol.length]=0;
+		  }, 
+		  
+		  AddSelect: function (title,option) {
+		     this.DataType[this.DataType.length]="select";
+			 this.DataTitle[this.DataTitle.length]=title;
+			 this.DataPlaceholder[this.DataPlaceholder.length]='';
+			 this.DataSelectOption[this.DataSelectOption.length]=option;
+			 this.DataTextareaRow[this.DataTextareaRow.length]=0;
+			 this.DataTextareaCol[this.DataTextareaCol.length]=0;
+		  },
+		   
+		  AddTextarea: function (title,placeholder,col,row) {
+		     this.DataType[this.DataType.length]="textarea";
+			 this.DataTitle[this.DataTitle.length]=title;
+			 this.DataPlaceholder[this.DataPlaceholder.length]=placeholder;
+			 this.DataSelectOption[this.DataSelectOption.length]=[];
+			 this.DataTextareaRow[this.DataTextareaRow.length]=row;
+			 this.DataTextareaCol[this.DataTextareaCol.length]=col;
+		  },
+		  Type: function () { return this.DataType; },
+          Title: function () { return this.DataTitle; },
+		  Placeholder: function () { return this.DataPlaceholder; },
+		  SelectOption: function () { return this.DataSelectOption; },
+          TextareaRow: function () { return this.DataTextareaRow; },
+		  TextareaCol: function () { return this.DataTextareaCol; }
+	  };
+
+	  var buttons = new Buttons();
+	  var formdatas = new FormDatas(); 
+
+	  var Toolbar = React.createClass({
+	     render: function () {
+		   var ClickFunc=this.props.Funcs;
+		   return (<div key="toolbar">
+		     {this.props.Names.map(function (value,index) {
+			    return ( <button key={value}  onClick={ClickFunc[index]}>
+				   {value} 
+				</button>); 
+			 })}
+		   </div>);
+		 
+		 }
+	  });
+	  
+	  var FormDesign = React.createClass({
+         render: function () {
+		   var title = this.props.Title,
+		       placeholder = this.props.Placeholder,
+               selectoption = this.props.SelectOption,
+			   textarearow = this.props.TextareaRow,
+			   textareacol = this.props.TextareaCol;
+		   return (<div>
+             {this.props.Type.map(function (type,index) {
+			    if (type=="input") {
+			       return (<div key = {title[index]}>
+                      <Form>
+					     <FormGroup controlId="formValidationSuccess1" validationState="success">
+						 <ControlLabel>   
+						   {title[index]}
+						 </ControlLabel>   
+					     <FormControl className="form-data" name={title[index]} type='text' placeholder={placeholder[index]}/>
+						 </FormGroup>
+					  </Form>
+				   </div>);
+				}
+
+				else if (type=="select") {
+			       return (<div key = {title[index]} >
+				      <Form>
+					     <FormGroup controlId="formControlsSelect">
+						    <ControlLabel>
+							  {title[index]}
+						    </ControlLabel>
+							<FormControl componentClass="select" className="form-data" name={title[index]}>
+                            {selectoption[index].map(function (value){
+							   return (
+							      <option key={value}> {value} </option>
+							   );
+							})}
+							</FormControl>
+						 </FormGroup>
+					  </Form>
+				   </div>);
+				}
+
+				else if (type=="textarea") {
+			       return (<div key = {title[index]}>
+				      <Form>
+					     <FormGroup controlId="formControlsTextarea">
+						    <ControlLabel>
+                              {title[index]}
+							</ControlLabel>
+							<FormControl componentClass="textarea" className="form-data" name={title[index]} cols={textarearow[index]} rows={textareacol[index]}/>
+					     </FormGroup>
+				      </Form>
+
+				   </div>);
+				}
+			 })}    			
+		   </div>);
+		 }	  
+
+	  });
+
+      var CreateModal = function () {
+	      showCreateModal("Create"); 
+            $modalCreate.find('.submit').click(function ()
+				{
+				    var row={};
+					$modalCreate.find('.form-data').each(function ()
+					{
+						row[$(this).attr('name')] = $(this).val();
+						//alert(row[$(this).attr('name')]);
+					});
+					
+					$.ajax({
+					    type: 'POST',
+						data: JSON.stringify(row),
+						url: '',
+                        contentType: "application/json;charset=utf-8",
+						beforeSend : function (xhr) {
+						
+						},
+						dataType: 'JSON'
+					}).done(function(response){
+					
+					
+					
+					})
+
+/*
+
+						$.ajax({
+							type: 'POST',
+							data: JSON.stringify(sendInfo),
+							url: '/v1/admin/announcement/createActivity',
+							//url: 'https://10.109.35.65:3002/v1/admin/announcement/createAnnouncement',
+							contentType: "application/json;charset=utf-8",
+							beforeSend : function( xhr ) {
+								xhr.setRequestHeader( "Authorization", "BEARER " +  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm8iOiJlYjNjNDk2ZmIwNWI0NGIyOGIxZjZmNTEiLCJpYXQiOjE0NjU4ODk5MTUsImV4cCI6MTQ5NzQyNTkxNX0.mikkSiCdeG5szDsPvE3eGY8ONPiARoNa6B5RAp0wXmU' );
+							},
+
+							dataType: 'JSON'
+						}).done(function( response ) {
+
+							// Check for successful response
+							if (response.success == true) {
+								//window.location.reload()
+								return true;
+							}
+							else {
+								// If something goes wrong, alert the error message that our service returned
+								alert('Error: ' + response.errMsg);
+								return false;
+							}
+						});
+
+						$modalCreate.modal('hide');
+						$table.bootstrapTable('refresh');
+						showAlert(($modalCreate.data('id') ? 'Update' : 'Create') + ' item successful!', 'success');
+					}
+				});*/
+			});
+	  }
+      var showCreateModal = function (title, row)
+		{
+			$modalCreate.find('.modal-add').text(title);
+
+			$modalCreate.modal('show');
+		    ReactDOM.render(
+			  <FormDesign Type = {formdatas.Type()} 
+			             Title = {formdatas.Title()}
+						 Placeholder = {formdatas.Placeholder()}
+						 SelectOption = {formdatas.SelectOption()}
+						 TextareaRow = {formdatas.TextareaRow()}
+						 TextareaCol = {formdatas.TextareaCol()} />,
+
+              document.getElementById("test-container")
+			);
+		};
+
+      var UpdateModal = function() {};
+
+	  var DeleteModal = function() {};
+
+      buttons.Add("Create",CreateModal);
+	  buttons.Add("Delete",DeleteModal);
+	  buttons.Add("Update",UpdateModal);
+
+      formdatas.AddInput("Title","Enter Title Here..");
+      formdatas.AddInput("Issue Date","Enter Issue Date Here..");
+      formdatas.AddInput("Start Date","Enter Start Date Here..");
+      formdatas.AddInput("End Date","Enter End Date Here..");
+	  formdatas.AddSelect("District",["全區","新店區","木柵區","八里區","三芝區"]);
+	  formdatas.AddTextarea("Content","",20,20);
+      formdatas.AddInput("Link","Please Enter Link Here..");
+	  //console.log(buttons.Name()[0]);
+	  //buttons.Func()[0]();
+
+	  ReactDOM.render(
+	     <Toolbar Names={buttons.Name()} Funcs={buttons.Func()}/>,
+		 document.getElementById("toolbar-container")
+	  );
+
+    </script>
+</body>
+</html>
+

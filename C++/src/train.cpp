@@ -1,7 +1,9 @@
 ﻿#include<iostream>
+#include<stdio.h>
 #include<cstring>
 #include<fstream>
 #include<iomanip>
+#include<sstream>
 #include"hmm.h"
 using namespace std;
 
@@ -9,35 +11,48 @@ using namespace std;
 char line[SIZE];
 
 int convert(char);
+void write_model();
 
-double all_observation_n[6][6]={};
-double all_observation_d[6][6]={};
-double all_initial[6]={};
-double all_transition_n[6][6]={};
-double all_transition_d[6]={};
-int test_num=0;
-
-double alpha[MAX_SEQ][6],beta[MAX_SEQ][6],gama[MAX_SEQ][6];
-double ksi[MAX_SEQ][6][6];
-int main(){
+int main(int argc , char** argv){
 	ifstream file;
 	char line[200];
 	HMM hmm;
-	loadHMM(&hmm,"model_init.txt");
-	file.open("seq_model_01.txt",ios::in);
+    stringstream ss;
+    string s(argv[1]);
+    ss << s;
+    int iter;
+    ss >> iter;
+    ss.str("");
+    ss.clear();
+	loadHMM(&hmm,argv[2]);
+    FILE *fp=fopen(argv[4],"w");
+    //dumpHMM(stderr,&hmm);	
 
-	//dumpHMM(stderr,&hmm);
+    for (int it=0 ; it<iter ; it++) { 
+	file.open(argv[3],ios::in);
+    double all_observation_n[6][6]={};
+    double all_observation_d[6][6]={};
+    double all_initial[6]={};
+    double all_transition_n[6][6]={};
+    double all_transition_d[6]={};
+    int test_num=0;
+
+    double alpha[MAX_SEQ][6],beta[MAX_SEQ][6],gama[MAX_SEQ][6];
+    double ksi[MAX_SEQ][6][6];
+    
 	while (file.getline(line,sizeof(line),'\n'))			
 	{
 		int T=strlen(line); //cout<<T<<endl;
 		if (!(T>0)) break;
 		else test_num++;
-
+        
+        //compute alpha
 		for(int count_1=0;count_1<T;count_1++) {
 			for(int count_2=0;count_2<6;count_2++)
 			{
 				if (count_1==0)
 					alpha[0][count_2]=hmm.initial[count_2]*hmm.observation[convert(line[0])][count_2];
+                    //α0(i) = pi(i)*bi(o0)
 				else {
 					double N=0;//αt+1(j) = ∑i=1~N[ αt(i) × aij ] × bj(ot+1)  
 					for (int k=0;k<6;k++)
@@ -48,8 +63,11 @@ int main(){
 					alpha[count_1][count_2] = N*hmm.observation[convert(line[count_1])][count_2];
 				}
 			}
-                 }
-		
+        }
+        //compute alpha end
+
+
+
 		/*cout<<"\nalpha:\n";
 		for(int count_1=0;count_1<T;count_1++) {
 			for(int count_2=0;count_2<6;count_2++) {
@@ -59,6 +77,8 @@ int main(){
 		}*/
 
 
+
+        //compute beta
 		//βT(i) = 1  βt(i) = ∑j=1~N[ aij × bj(ot+1) × βt+1(j) ]
 		for(int count_3=T-1;count_3>=0;count_3--)
 		{
@@ -70,11 +90,12 @@ int main(){
 				else {
 					for (int l=0;l<6;l++) { //j=l
 					    L+=hmm.transition[count_4][l]*hmm.observation[convert(line[(count_3+1)])][l]*beta[count_3+1][l];
-                                        }
-				beta[count_3][count_4]=L;
-                                }
+                    }
+				    beta[count_3][count_4]=L;
+                }
 			}
 		}
+        //compute beta end
 
 		/*cout<<"\nbeta:\n";
                 for(int count_1=0;count_1<T;count_1++) {
@@ -86,6 +107,7 @@ int main(){
 		}*/
 
 
+        //compute gamma 
 		for(int count_5=0;count_5<T;count_5++)// γt(i) =αt(i) × βt(i)/ ∑j=1~N ksit(i,j)=∑i=1~N [ αt(i) × βt(i) ]
 		{
 			double G=0;
@@ -95,21 +117,25 @@ int main(){
 			//cout<<G<<endl;
 			for (int i=0 ; i<6 ; i++) {
 				if(G == 0) {
-                			gama[count_5][i] = pow(10, -100);
+                    //cout<<"yes\n";        
+                	gama[count_5][i] = pow(10, -100);
 					continue;
 				}
 				gama[count_5][i]=alpha[count_5][i]*beta[count_5][i]/G;
             
 			}
 		}
+        //compute gamma end
 
-                /*for(int count_1=0;count_1<T;count_1++) {
+
+        /*for(int count_1=0;count_1<T;count_1++) {
 			for(int count_2=0;count_2<6;count_2++) {
 				cout<<gama[count_1][count_2]<<" ";
 			}
 			cout<<endl;
 		}*/
 
+        //compute ksi
 		for(int count_6=0;count_6<T-1;count_6++)
 		{
 			double K=0;
@@ -137,18 +163,8 @@ int main(){
 				}
 			}
 		}
-		//check
-		/*for(int count_1=0;count_1<T;count_1++) {
-			for(int count_2=0;count_2<6;count_2++) {
+        //compute ksi end
 
-				cout<<gama[count_1][count_2]<<" ";
-
-			}
-
-			cout<<endl;
-
-		}*/
-		// check
 		for (int i=0 ; i<6 ; i++) {
 			
 			all_initial[i]+=gama[0][i];
@@ -162,9 +178,7 @@ int main(){
 				}
 				for (int t=0 ; t<T ;t++) {
 					G+=ksi[t][i][j];
-					//cout<<gama[t][i]<<"hahaha"<<endl;
 				}
-				//cout<<"you are bitch"<<endl;
 				all_transition_n[i][j]+=K;
 			}
 			
@@ -187,7 +201,6 @@ int main(){
 				all_observation_d[k][j]+=G2;
 			}
 		}
-		//dumpHMM(stderr,&hmm);
 	}
 	
 	for(int i = 0; i < 6; i++)
@@ -203,11 +216,10 @@ int main(){
     for(int k = 0; k < 6; k++) {
         for(int j = 0; j < 6; j++)
             hmm.observation[k][j] = all_observation_n[k][j] / all_observation_d[k][j];
-    }
-	
-	file.close();
-	dumpHMM(stderr,&hmm);
-	//system("pause");
+    }file.close();} //end while end for	
+    
+    //dumpHMM(stderr,&hmm);
+    dumpHMM(fp,&hmm);
 	return 0;
 }
 
